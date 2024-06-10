@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Import;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@DataJpaTest
 class StudentServiceDataJpaTest {
 
     @Test
