@@ -12,6 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@EqualsAndHashCode
 public class Student {
 
     @Id
@@ -20,4 +21,6 @@ public class Student {
     private String firstName;
     @NotBlank(message = "lastName is required")
     private String lastName;
+    @NotBlank(message = "email is required")
+    private String email;
 }

@@ -2,9 +2,10 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Student;
 import com.example.demo.repository.StudentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.util.ValidateUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,21 +13,27 @@ import java.util.UUID;
 @Service
 public class StudentService {
 
-    @Autowired
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
+
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
+
+    public Student createStudent(Student student) {
+        validateStudent(student);
+
+        student.setId(UUID.randomUUID().toString());
+        return studentRepository.save(student);
+    }
 
     public List<Student> getStudents() {
         return studentRepository.findAll();
     }
 
-    public Student createStudent(Student student) {
-        student.setId(UUID.randomUUID().toString());
-        studentRepository.save(student);
-        return studentRepository.save(student);
-    }
+    public Student updateStudent(Student student) {
+        validateStudent(student);
 
-    public Student updateStudent(String studentId, Student student) {
-        Student existingStudent = getExistingStudent(studentId);
+        Student existingStudent = getExistingStudent(student.getId());
         existingStudent.setFirstName(student.getFirstName());
         existingStudent.setLastName(student.getLastName());
         return existingStudent;
@@ -39,6 +46,20 @@ public class StudentService {
     }
 
     private Student getExistingStudent(String studentId) {
-        return studentRepository.findById(studentId).orElseThrow(() -> new NotFoundException("Student not found"));
+        return studentRepository.findById(studentId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found"));
+    }
+
+    private static void validateStudent(Student student) {
+        if (!ValidateUtil.isValidName(student.getFirstName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid first name");
+        }
+
+        if (!ValidateUtil.isValidName(student.getFirstName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid last name");
+        }
+
+        if (!ValidateUtil.isValidEmail(student.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email");
+        }
     }
 }
