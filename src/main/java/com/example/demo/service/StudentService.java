@@ -21,7 +21,6 @@ public class StudentService {
 
     public Student createStudent(Student student) {
         validateStudent(student);
-
         student.setId(UUID.randomUUID().toString());
         return studentRepository.save(student);
     }
@@ -29,7 +28,6 @@ public class StudentService {
     public List<Student> getStudents() {
         return studentRepository.findAll();
     }
-
     public Student updateStudent(Student student) {
         validateStudent(student);
 
@@ -38,7 +36,6 @@ public class StudentService {
         existingStudent.setLastName(student.getLastName());
         return existingStudent;
     }
-
 
     public void deleteStudent(String studentId) {
         Student existingStudent = getExistingStudent(studentId);
