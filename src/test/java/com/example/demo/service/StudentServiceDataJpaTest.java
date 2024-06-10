@@ -11,11 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @DataJpaTest
-@Import(StudentService.class)
 class StudentServiceDataJpaTest {
-
-    @Autowired
-    StudentService studentService;
 
     @Test
     void createStudent() {
